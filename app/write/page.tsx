@@ -35,7 +35,7 @@ import {
   getDownloadURL,
 } from "firebase/storage";
 import { app } from "@/utils/firebase";
-import axios from "axios";
+// import axios from "axios";
 import blogServices from "@/services/blogServices";
 import { useRouter } from "next/navigation";
 
@@ -118,10 +118,10 @@ export default function SelectForm() {
       slug: slugify(data.titulo),
       catSlug: data.catSlug || "estilo",
     }
-    console.log("🚀 ~ file: page.tsx:160 ~ onSubmit ~ post:", {...post})
+    // console.log("🚀 ~ file: page.tsx:160 ~ onSubmit ~ post:", {...post})
     try {
       const res =  await blogServices.createPost(post)
-      console.log("🚀 ~ file: page.tsx:160 ~ onSubmit ~ res:", res)
+      // console.log("🚀 ~ file: page.tsx:160 ~ onSubmit ~ res:", res)
       toast({
         title: "You submitted the following values:",
         description: (
@@ -135,7 +135,7 @@ export default function SelectForm() {
         router.push(`/posts/${data.slug}`);
       }
     } catch (error) {
-      console.log("🚀 ~ file: page.tsx:165 ~ onSubmit ~ error:", error)
+      // console.log("🚀 ~ file: page.tsx:165 ~ onSubmit ~ error:", error)
       
     }
   }
