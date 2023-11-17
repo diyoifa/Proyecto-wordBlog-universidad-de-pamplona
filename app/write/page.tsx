@@ -48,6 +48,14 @@ const FormSchema = z.object({
 });
 
 export default function SelectForm() {
+  const [ReactQuill, setReactQuill] = useState<any>(null);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setReactQuill(require("react-quill"));
+    }
+  }, []);
+
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -82,21 +90,21 @@ export default function SelectForm() {
           (snapshot) => {
             const progress =
               (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-            console.log("Upload is " + progress + "% done");
+            // console.log("Upload is " + progress + "% done");
             switch (snapshot.state) {
               case "paused":
-                console.log("Upload is paused");
+                // console.log("Upload is paused");
                 break;
               case "running":
-                console.log("Upload is running");
+                // console.log("Upload is running");
                 break;
             }
           },
           (error) => {
-            console.log(
-              "🚀 ~ file: page.tsx:129 ~ upload ~ error:",
-              error.message
-            );
+            // console.log(
+            //   "🚀 ~ file: page.tsx:129 ~ upload ~ error:",
+            //   error.message
+            // );
           },
           () => {
             getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
@@ -117,8 +125,8 @@ export default function SelectForm() {
   }, []);
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
-    console.log(data);
-    console.log({ ...data, value, file });
+    // console.log(data);
+    // console.log({ ...data, value, file });
 
     const post = {
       title: data.titulo,
@@ -137,10 +145,10 @@ export default function SelectForm() {
           description: (
             <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
               {/* <code className="text-white">{JSON.stringify(res, null, 2)}</code> */}
-                ❤️
+              ❤️
             </pre>
           ),
-        })
+        });
       }
       if (res.status === 200) {
         const data = await res.json();
@@ -234,37 +242,17 @@ export default function SelectForm() {
           </form>
         </Form>
         <div className="flex flex-col relative px-28 text-center">
-          {/*
-                  <h1 className="text-2xl  py-2 px-0 text-left mb-1 mt-8 mx-0 bg-gradient-to-r from-blue-400 to-cyan-900 bg-clip-text text-transparent  font-bold  dark:bg-gradient-to-r dark:from-blue-400 dark:to-cyan-900 dark:bg-clip-text dark:text-transparent  transition hover:scale-105">
-                    Inserta una imagen
-                  </h1>
-                  <Avatar onClick={() => setOpen(!open)}>
-                    <AvatarImage src="/plus.png" />
-                    <AvatarFallback>CN</AvatarFallback>
-                  </Avatar>
-                   {open && (
-                    <div className="flex">
-                      <input
-                        type="file"
-                        
-                        onChange={(e:ChangeEvent<HTMLInputElement>) => setFile(e.target.files[0])}
-                        className="hidden"
-                      />
-                      <Avatar>
-                        <AvatarImage src="/image.png"/>
-                        <AvatarFallback>CN</AvatarFallback>
-                      </Avatar>
-                    </div>
-                  )} */}
           <h1 className="text-2xl  py-2 px-0 text-left mb-1 mt-8 mx-0 bg-gradient-to-r from-blue-400 to-cyan-900 bg-clip-text text-transparent  font-bold  dark:bg-gradient-to-r dark:from-blue-400 dark:to-cyan-900 dark:bg-clip-text dark:text-transparent  transition hover:scale-105">
             Cuerpo del post
           </h1>
-          <ReactQuill
-            className="w-full mt-4 h-[350px] mb-12"
-            theme="snow"
-            value={value}
-            onChange={setValue}
-          />
+          {ReactQuill && (
+            <ReactQuill
+              className="w-full mt-4 h-[350px] mb-12"
+              theme="snow"
+              value={value}
+              onChange={setValue}
+            />
+          )}
         </div>
       </div>
     </div>
