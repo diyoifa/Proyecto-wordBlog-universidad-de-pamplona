@@ -1,4 +1,3 @@
-
 "use client";
 // import Link from "next/link";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -27,7 +26,7 @@ import "react-quill/dist/quill.snow.css";
 import { toast } from "@/components/ui/use-toast";
 // import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useState, ChangeEvent, useEffect } from "react";
-import { Label } from "@/components/ui/label"
+import { Label } from "@/components/ui/label";
 import {
   getStorage,
   ref,
@@ -53,11 +52,11 @@ export default function SelectForm() {
     resolver: zodResolver(FormSchema),
     defaultValues: {
       catSlug: "",
-      titulo:""
+      titulo: "",
     },
   });
 
-  const [open, setOpen] = useState<boolean>(false);
+  // const [open, setOpen] = useState<boolean>(false);
   const [file, setFile] = useState<File | null>(null);
   const [value, setValue] = useState<string>("");
   const [media, setMedia] = useState("");
@@ -72,74 +71,86 @@ export default function SelectForm() {
       .replace(/^-+|-+$/g, "");
 
   useEffect(() => {
-        const storage = getStorage(app);
-        const upload = () => {
-          if(file){
-          const name = new Date().getTime() + file.name;
-          const storageRef = ref(storage, name);
-          const uploadTask = uploadBytesResumable(storageRef, file);
-          uploadTask.on(
-            "state_changed",
-            (snapshot) => {
-              const progress =
-                (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-              console.log("Upload is " + progress + "% done");
-              switch (snapshot.state) {
-                case "paused":
-                  console.log("Upload is paused");
-                  break;
-                case "running":
-                  console.log("Upload is running");
-                  break;
-              }
-            },
-            (error) => {
-              console.log("🚀 ~ file: page.tsx:129 ~ upload ~ error:", error.message)
-            },
-            () => {
-              getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-                setMedia(downloadURL);
-              });
+    const storage = getStorage(app);
+    const upload = () => {
+      if (file) {
+        const name = new Date().getTime() + file.name;
+        const storageRef = ref(storage, name);
+        const uploadTask = uploadBytesResumable(storageRef, file);
+        uploadTask.on(
+          "state_changed",
+          (snapshot) => {
+            const progress =
+              (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+            console.log("Upload is " + progress + "% done");
+            switch (snapshot.state) {
+              case "paused":
+                console.log("Upload is paused");
+                break;
+              case "running":
+                console.log("Upload is running");
+                break;
             }
-          )}
-        };
-    
-        file && upload();
+          },
+          (error) => {
+            console.log(
+              "🚀 ~ file: page.tsx:129 ~ upload ~ error:",
+              error.message
+            );
+          },
+          () => {
+            getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+              setMedia(downloadURL);
+            });
+          }
+        );
+      }
+    };
+
+    file && upload();
   }, [file]);
+
+  const [showToast, setShowToast] = useState(false);
+
+  useEffect(() => {
+    setShowToast(true);
+  }, []);
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     console.log(data);
-    console.log({...data, value, file})
-    
+    console.log({ ...data, value, file });
+
     const post = {
       title: data.titulo,
-      desc:value,
+      desc: value,
       img: media,
       slug: slugify(data.titulo),
       catSlug: data.catSlug || "estilo",
-    }
+    };
     // console.log("🚀 ~ file: page.tsx:160 ~ onSubmit ~ post:", {...post})
     try {
-      const res =  await blogServices.createPost(post)
+      const res = await blogServices.createPost(post);
       // console.log("🚀 ~ file: page.tsx:160 ~ onSubmit ~ res:", res)
-      toast({
-        title: "You submitted the following values:",
-        description: (
-          <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-            <code className="text-white">{JSON.stringify(res, null, 2)}</code>
-          </pre>
-        ),
-      });
+      if (showToast) {
+        toast({
+          title: "Blog created successfully",
+          description: (
+            <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+              {/* <code className="text-white">{JSON.stringify(res, null, 2)}</code> */}
+                ❤️
+            </pre>
+          ),
+        })
+      }
       if (res.status === 200) {
         const data = await res.json();
         router.push(`/posts/${data.slug}`);
       }
     } catch (error) {
       // console.log("🚀 ~ file: page.tsx:165 ~ onSubmit ~ error:", error)
-      
     }
   }
-  
+
   return (
     <div className="my-0 mx-auto">
       <div className="mt-28">
@@ -207,9 +218,9 @@ export default function SelectForm() {
                 />
                 <div className="grid w-full max-w-sm items-center gap-1.5">
                   <Label htmlFor="picture">Imagen</Label>
-                  <Input 
-                    id="picture" 
-                    type="file" 
+                  <Input
+                    id="picture"
+                    type="file"
                     onChange={(e: ChangeEvent<HTMLInputElement>) => {
                       if (e.target.files) {
                         setFile(e.target.files[0]);
@@ -246,8 +257,8 @@ export default function SelectForm() {
                     </div>
                   )} */}
           <h1 className="text-2xl  py-2 px-0 text-left mb-1 mt-8 mx-0 bg-gradient-to-r from-blue-400 to-cyan-900 bg-clip-text text-transparent  font-bold  dark:bg-gradient-to-r dark:from-blue-400 dark:to-cyan-900 dark:bg-clip-text dark:text-transparent  transition hover:scale-105">
-              Cuerpo del post
-          </h1>        
+            Cuerpo del post
+          </h1>
           <ReactQuill
             className="w-full mt-4 h-[350px] mb-12"
             theme="snow"
