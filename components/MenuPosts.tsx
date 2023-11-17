@@ -12,7 +12,7 @@ type MenuPostsProps = {
 
 const MenuPosts = async({withImage}:MenuPostsProps) => {
    
-    const {posts} = await blogServices.getPosts()
+    const {posts} = await blogServices.getPosts(1, "")
 
   return (
     <div className='hidden md:flex md:flex-col gap-3 mb-12 mt-2'>
@@ -32,7 +32,7 @@ const MenuPosts = async({withImage}:MenuPostsProps) => {
             }
             <div className='flex flex-col gap-1'>
                 <Badge className='min-w-fit justify-center p-2'>{post.catSlug}</Badge>
-                <Badge variant="primary" className='w-auto justify-center p-2'>Visitas: {post.views}</Badge>
+                <Badge variant="default" className='w-auto justify-center p-2'>Visitas: {post.views}</Badge>
                 <h3 className='text-base text-slate-500'>
                     {post.title}
                 </h3>
