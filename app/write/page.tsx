@@ -1,5 +1,6 @@
 "use client";
 // import Link from "next/link";
+import dynamic from "next/dynamic";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -21,7 +22,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import ReactQuill from "react-quill";
+// import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { toast } from "@/components/ui/use-toast";
 // import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -47,15 +48,10 @@ const FormSchema = z.object({
   }),
 });
 
+const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
+
 export default function SelectForm() {
-  const [ReactQuill, setReactQuill] = useState<any>(null);
-
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      setReactQuill(require("react-quill"));
-    }
-  }, []);
-
+  
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -67,7 +63,7 @@ export default function SelectForm() {
   // const [open, setOpen] = useState<boolean>(false);
   const [file, setFile] = useState<File | null>(null);
   const [value, setValue] = useState<string>("");
-  const [media, setMedia] = useState("");
+  const [media, setMedia] = useState<string>("");
   const router = useRouter();
 
   const slugify = (str: string) =>
@@ -242,17 +238,20 @@ export default function SelectForm() {
           </form>
         </Form>
         <div className="flex flex-col relative px-28 text-center">
-          <h1 className="text-2xl  py-2 px-0 text-left mb-1 mt-8 mx-0 bg-gradient-to-r from-blue-400 to-cyan-900 bg-clip-text text-transparent  font-bold  dark:bg-gradient-to-r dark:from-blue-400 dark:to-cyan-900 dark:bg-clip-text dark:text-transparent  transition hover:scale-105">
+          <h1 className="text-center text-2xl  py-2 px-0  mb-1 mt-8 mx-0 bg-gradient-to-r from-blue-400 to-cyan-900 bg-clip-text text-transparent  font-bold  dark:bg-gradient-to-r dark:from-blue-400 dark:to-cyan-900 dark:bg-clip-text dark:text-transparent  transition hover:scale-105">
             Cuerpo del post
           </h1>
-          {ReactQuill && (
-            <ReactQuill
-              className="w-full mt-4 h-[350px] mb-12"
-              theme="snow"
-              value={value}
-              onChange={setValue}
-            />
-          )}
+          <div className="my-0 mx-auto w-full">
+            <div className="mt-4">
+              {ReactQuill && (
+                <ReactQuill 
+                theme="snow" 
+                value={value} 
+                onChange={setValue} 
+              />
+              )}
+            </div>
+          </div>
         </div>
       </div>
     </div>
