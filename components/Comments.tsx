@@ -19,9 +19,11 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 
 const Comments = ({postSlug}:{postSlug:string}) => {
+    // console.log("🚀 ~ file: Comments.tsx:22 ~ Comments ~ postSlug:", postSlug)
+    
     const[isLoading, setIsLoading] = React.useState(false)
     const[comments, setComments] = React.useState<Comment[]>([])
-    // console.log("🚀 ~ file: Comments.tsx:21 ~ Comments ~ data:", data)
+    // console.log("🚀 ~ file: Comments.tsx:21 ~ Comments ~ data:", comments)
 
     const { data: session } = useSession();
     
@@ -33,6 +35,9 @@ const Comments = ({postSlug}:{postSlug:string}) => {
                 setTimeout(() => {
                     setIsLoading(false)
                 }, 2000)
+            }).catch(error => {
+                // console.error("Error fetching comments:", error)
+                setIsLoading(false)
             })
     }, [postSlug, setComments])
     

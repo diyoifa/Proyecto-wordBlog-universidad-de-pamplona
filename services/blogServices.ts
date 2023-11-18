@@ -1,8 +1,8 @@
 import axios from 'axios'
 // import { PostType} from '@/types/types'
 
- const API_URL = process.env.NEXTAUTH_URL
-
+ const API_URL = process.env.NEXT_PUBLIC_NEXTAUTH_URL
+// console.log(API_URL)
 //obtener todos las categorias
 const getData = async()=>{
     const res = await axios.get(`${API_URL}/api/category`)
@@ -30,8 +30,9 @@ const getSinglePost = async(slug:string)=>{
 
 const getComments = async(slug:string)=>{
     // console.log(slug)
+    // console.log(API_URL)
     const res = await axios.get(`${API_URL}/api/comments?postSlug=${slug}`)
-    console.log("🚀 ~ file: blogServices.tsx:25 ~ getSinglePost ~ res:", res)    
+    // console.log("🚀 ~ file: blogServices.tsx:25 ~ getSinglePost ~ res:", res)    
     return res.data
 }
 
